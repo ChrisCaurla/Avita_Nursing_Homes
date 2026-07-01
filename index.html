@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida's Worst Nursing Homes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.0.4/scrollama.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #110e08;
+  --bg-deep: #0a0805;
+  --rust: #bf5020;
+  --rust-dim: #7a3215;
+  --rust-dark: #3d1a0b;
+  --cream: #e8dcc8;
+  --cream-dim: #b8afa0;
+  --muted: #6a6258;
+  --divider: rgba(255,255,255,0.07);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Source Serif 4', Georgia, serif;
+  overflow-x: hidden;
+}
+
+/* ─── HERO ─── */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 8vh;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  opacity: 0.9;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10,8,5,0.55) 0%,
+    rgba(10,8,5,0.15) 40%,
+    rgba(10,8,5,0.05) 60%,
+    rgba(17,14,8,0.85) 85%,
+    rgba(17,14,8,1.0) 100%
+  );
+}
+
+.hero-title {
+  position: relative;
+  z-index: 10;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(40px, 8vw, 100px);
+  line-height: 0.95;
+  text-align: center;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-shadow: 0 4px 40px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.6);
+  max-width: 900px;
+  padding: 0 24px;
+}
+
+.hero-scroll-hint span {
+  font-family: 'Barlow', sans-serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: rgba(232,220,200,0.4);
+  text-transform: uppercase;
+}
+
+.scroll-arrow {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(180deg, rgba(232,220,200,0.4), transparent);
+  animation: pulseArrow 2s ease-in-out 1.5s infinite;
+}
+
+@keyframes fadeInScroll {
+  to { opacity: 1; }
+}
+
+@keyframes pulseArrow {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50% { opacity: 0.8; transform: scaleY(1.15); }
+}
+
+/* ─── FADE IN ON SCROLL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── PROSE CHAPTER ─── */
+.chapter {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 64px 32px;
+}
+
+.chapter p {
+  font-size: clamp(17px, 2.2vw, 20px);
+  line-height: 1.75;
+  color: var(--cream-dim);
+  margin-bottom: 1.4em;
+}
+
+.chapter p:last-child { margin-bottom: 0; }
+
+.chapter p strong {
+  color: var(--cream);
+  font-weight: 600;
+}
+
+/* ─── BLOCKQUOTE ─── */
+.pull-quote {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 48px 32px;
+}
+
+.pull-quote blockquote {
+  font-size: clamp(22px, 3.5vw, 34px);
+  line-height: 1.4;
+  font-style: italic;
+  color: var(--cream);
+  border-left: 3px solid var(--rust);
+  padding-left: 28px;
+}
+
+.pull-quote cite {
+  display: block;
+  font-size: 13px;
+  font-style: normal;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 16px;
+  padding-left: 31px;
+  font-family: 'Barlow', sans-serif;
+}
+
+/* ─── SECTION DIVIDER ─── */
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--divider);
+}
+
+/* ─── BIG STAT INTERSTITIAL ─── */
+.interstitial {
+  background: var(--bg-deep);
+  padding: 80px 32px;
+  text-align: center;
+}
+
+.big-number {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(90px, 18vw, 200px);
+  line-height: 1;
+  color: var(--rust);
+  letter-spacing: -4px;
+  display: block;
+}
+
+.big-number-label {
+  font-family: 'Barlow', sans-serif;
+  font-size: clamp(11px, 1.5vw, 14px);
+  letter-spacing: 6px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 12px;
+  display: block;
+}
+
+.stars-display {
+  font-size: 32px;
+  color: var(--rust);
+  letter-spacing: 6px;
+  margin: 32px 0 12px;
+  display: block;
+}
+
+.stars-label {
+  font-size: clamp(14px, 1.8vw, 17px);
+  color: var(--cream-dim);
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ─── DRAMATIC SINGLE LINE ─── */
+.drama-line {
+  background: var(--bg);
+  padding: 60px 32px;
+  text-align: center;
+}
+
+.drama-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(28px, 5.5vw, 64px);
+  color: var(--cream);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.drama-text em {
+  color: var(--rust);
+  font-style: normal;
+}
+
+/* ─── MAPS SECTION ─── */
+.maps-section {
+  padding: 64px 32px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.maps-eyebrow {
+  font-family: 'Barlow', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--rust);
+  text-transform: uppercase;
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+.maps-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.map-card {
+  background: var(--bg-deep);
+  border: 1px solid rgba(191,80,32,0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.map-visual {
+  width: 100%;
+  height: 260px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.map-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.map-name {
+  font-family: 'Barlow', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.map-rating {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--rust);
+}
+
+.map-count {
+  font-size: 13px;
+  color: var(--cream-dim);
+  font-family: 'Barlow', sans-serif;
+  text-align: center;
+  margin-top: 24px;
+}
+
+/* ─── WORKER SECTION ─── */
+.worker-section {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 64px 32px;
+}
+
+.photo-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 48px 0;
+}
+
+.photo-placeholder {
+  background: var(--bg-deep);
+  border: 1px dashed rgba(191,80,32,0.3);
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ─── CHART SECTION ─── */
+.chart-section {
+  background: var(--bg-deep);
+  padding: 64px 32px;
+}
+
+.chart-inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.chart-eyebrow {
+  font-family: 'Barlow', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--rust);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.chart-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 4vw, 48px);
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  margin-bottom: 40px;
+}
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bar-label {
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+  width: 80px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.bar-track {
+  flex: 1;
+  height: 20px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 1px;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bar-fill.rust { background: var(--rust); }
+.bar-fill.dim { background: var(--rust-dim); }
+
+.bar-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--cream-dim);
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.chart-note {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin-top: 24px;
+  border-left: 2px solid var(--rust-dark);
+  padding-left: 16px;
+}
+
+/* ─── IMMEDIATE JEOPARDY ─── */
+.ij-section {
+  background: var(--bg-deep);
+  padding: 100px 32px;
+  text-align: center;
+  border-top: 1px solid var(--divider);
+}
+
+.ij-eyebrow {
+  font-family: 'Barlow', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.ij-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(52px, 10vw, 120px);
+  color: var(--rust);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+  margin-bottom: 16px;
+}
+
+.ij-definition {
+  font-size: clamp(14px, 1.8vw, 17px);
+  color: var(--cream-dim);
+  max-width: 420px;
+  margin: 0 auto 56px;
+  line-height: 1.6;
+}
+
+/* ─── PIE SECTION ─── */
+.pie-section {
+  padding: 64px 32px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.pie-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.pie-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 1px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.legend-text {
+  font-size: 14px;
+  color: var(--cream-dim);
+  line-height: 1.4;
+}
+
+.legend-pct {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--cream);
+}
+
+/* ─── PIVOT SCREEN ─── */
+.pivot-screen {
+  padding: 120px 32px;
+  text-align: center;
+}
+
+.pivot-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(36px, 7vw, 88px);
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.0;
+}
+
+.pivot-text em {
+  display: block;
+  color: var(--rust);
+  font-style: normal;
+  font-size: clamp(32px, 6vw, 72px);
+}
+
+/* ─── CLOSING ─── */
+.closing {
+  background: var(--bg-deep);
+  padding: 100px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.closing-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.08;
+  filter: grayscale(30%);
+}
+
+.closing-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.closing-text {
+  font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.75;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+
+.closing-rule {
+  width: 48px;
+  height: 2px;
+  background: var(--rust);
+  margin: 40px auto 0;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 640px) {
+  .maps-grid { grid-template-columns: 1fr; }
+  .pie-grid { grid-template-columns: 1fr; }
+  .photo-strip { grid-template-columns: 1fr 1fr; }
+  .chapter { padding: 40px 20px; }
+  .pull-quote { padding: 32px 20px; }
+  .maps-section { padding: 40px 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .bar-fill { transition: none; }
+  .hero-scroll-hint { animation: none; opacity: 1; }
+  .scroll-arrow { animation: none; }
+}
+
+/* ─── SCROLLYTELLING MAP SECTION ───
+   Pattern: the sticky image is pinned in place (position: sticky).
+   The caption column is a NORMAL, in-flow element that gets pulled
+   up on top of the sticky box with a negative margin-top equal to
+   the sticky box's height. Because the caption column itself is
+   NOT sticky, the browser scrolls it natively — no JS needed to
+   move it. Scrollama just watches which step is centered in the
+   viewport and toggles which image/caption is "active".
+*/
+.scrolly-section { position: relative; width: 100%; }
+
+.scrolly-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  z-index: 0;
+}
+.scrolly-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: right center;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  pointer-events: none;
+}
+.scrolly-img.active { opacity: 1; }
+
+/* This column is pulled up over the sticky image and scrolls normally */
+.scrolly-overlay {
+  position: relative;
+  z-index: 2;
+  margin-top: -100vh;
+  pointer-events: none;
+}
+
+.scrolly-step {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 6%;
+}
+
+.scrolly-step p {
+  max-width: 420px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1.4;
+  color: var(--cream);
+  margin: 0;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.scrolly-step p em { color: var(--rust); font-style: normal; }
+
+.scrolly-step.active p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrolly-step p { transition: none; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <img class="hero-img" src="embedded_image_1.png" alt="A nursing home facility at sunset with dramatic orange clouds">
+  <div class="hero-overlay"></div>
+  <h1 class="hero-title reveal">
+    Profiting from <br>Florida's Worst<br>Nursing Homes
+  </h1>
+  <div class="hero-scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- OPENING CHAPTER -->
+<section class="chapter reveal">
+  <p>In the middle of Florida's theme parks sits Kissimmee, a manicured, sun-drenched city where resort hotels advertise poolside cocktails and the air smells like sunscreen.</p>
+  <p>Just a 15-minute drive away a different smell welcomes visitors.</p>
+  <p><span style="color: var(--rust);">"The moment you enter the lobby, you can smell an odor coming from the rooms,"</span> says a nursing assistant at Aviata's Kissimmee Gardens nursing home. There aren't enough trash bags to go around, so diapers sit in the same bag for hours.</p>
+  <p>She is one of eight current and former employees interviewed for this story who work at one of the 52 skilled nursing facilities operated by <span style="color: var(--rust);">Aviata Health Group</span> across Florida. They all report bare-bones cost-cutting measures that lead to increases in falls, bedsores, and unhygienic conditions. </p>
+  <p><span style="color: var(--rust);">"Sometimes we have to be running from room to room to find diapers,"</span> says another worker who has been in the same facility for three years. Workers also complain of a lack of soap, gloves, and towels. Some say they have resorted to bringing toilet paper from home for their patients. Photo reviews scraped from Yelp show feces and urine on the ground, rusted furniture, and bruises that families say are from falls and bedsores. "They call it the doghouse," says another nursing assistant.</p>
+  <p>An analysis of <span style="color: var(--rust);">13,574 federal inspection records</span> filed against Florida nursing homes over the past three years corroborates the workers' accounts. 
+</section>
+
+
+<!-- ─── SCROLLYTELLING MAP ─── -->
+<div class="scrolly-section" id="scrolly-map">
+  <div class="scrolly-sticky">
+    <img id="simg-1" class="scrolly-img active" src="img1.png" alt="Map of all Florida nursing homes">
+    <img id="simg-2" class="scrolly-img" src="img2.png" alt="Map highlighting Aviata facilities">
+    <img id="simg-3" class="scrolly-img" src="img3.png" alt="Aviata citation rate vs Florida average">
+  </div>
+
+  <div class="scrolly-overlay">
+    <div class="scrolly-step active" data-step="1">
+      <p>There are <em>694 registered nursing homes</em> in Florida — one of the largest concentrations in the country.</p>
+    </div>
+    <div class="scrolly-step" data-step="2">
+      <p><em>53 of them</em> are operated by the Aviata Health Group, scattered across the state from the Panhandle to Miami.</p>
+    </div>
+    <div class="scrolly-step" data-step="3">
+      <p>An analysis of <em>13,574 federal inspection records</em> filed over the past three years shows Aviata facilities received <em>43% more citations</em> than the state average.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- VIOLATIONS -->
+<section class="chapter reveal">
+  <p>The majority of the violations mirrored what workers described, such as unhygienic conditions and old equipment. The most common citation is for lack of "a safe, clean, comfortable and homelike environment," a category where Aviata was cited <span style="color: var(--rust);">54% more often</span> than the rest of the nursing homes in Florida. Violations of residents' rights were <span style="color: var(--rust);">51% more common</span>.</p>
+  <p>The consequences are severe. Federal inspectors issued <span style="color: var(--rust);">"Immediate Jeopardy"</span> citations — the most serious CMS level reserved for risks of serious harm or death — <span style="color: var(--rust);">56% more often</span> than the Florida norm.</p>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- IMG4 -->
+<div class="full-image-block reveal">
+  <img src="img4.png" alt="Img4" style="width:100%; display:block;">
+</div>
+
+<div class="section-divider"></div>
+
+<!-- WELLTOWER / OWNERSHIP -->
+<section class="chapter reveal">
+  <p>Despite their record of patient harm, these facilities receive millions in taxpayer money through Medicare and Medicaid programs. And Welltower can hold its properties tax-free, since it is structured as a real-estate investment trust or REIT.</p>
+  <p>Bill Dean, a lawyer who has sued Aviata facilities dozens of times over the last 25 years, says he has seen the same pattern for over a decade. <span style="color: var(--rust);">"They accumulate lawsuits, then they go bankrupt, and come back with a different name,"</span> he says. But what's different this time is that early last year, Aviata facilities were acquired by a public company.</p>
+  <p>Unlike most private nursing home operators, Aviata's finances became public with its 2025 acquisition by <span style="color: var(--rust);">Welltower</span>, the nation's largest provider of senior housing. These financial statements give a rare window into the fortunes that come from neglecting patients and workers. Welltower paid Aviata's owners <span style="color: var(--rust);">$1.8 billion</span> in 2025 for 85 nursing homes in Florida and similarly substandard ones in Texas, granting its current owners a long-term operating contract.</p>
+  <p>Welltower's CEO profited from the deal, among the $33 billion in acquisitions that triggered an astounding <span style="color: var(--rust);">$821 million</span> in compensation last year. CEO Shankh Mitra brags about the warp speed of his acquisitions, since senior housing is selling at a discount to when its developers overestimated demand, and is expected to soon be insufficient for the rapidly aging U.S. population.</p>
+  <p>Mitra has quadrupled Welltower's stock price since becoming CEO in 2020. Based in Toledo, Ohio, the <span style="color: var(--rust);">$141 billion</span> company is a real-estate investment trust, or REIT, which holds properties tax-free and receives part of its income. Welltower is part of the S&P 500 index, so its shares are widely held by major pension funds and millions of retirees through their 401(k) plans. Like most roll-ups, Welltower saves money by combining back-office functions like accounting and human resources.</p>
+  <p>Aviata, as a substandard chain dependent on government funding through Medicare and Medicaid, marked Welltower's quiet move to the bottom of the senior market. It seems that substandard nursing homes can be more profitable than its "ultra-luxury" or "trophy" assisted living facilities. Welltower noted that it can earn even more by further cutting expenses, measured per occupied bed. <span style="color: var(--rust);">"You've got quality assets: check. Quality operator: check. Cash flow with room to the upside: check,"</span> said Co-President and Chief Investment Officer Nikhil Chaudhri in an April 2025 earnings call. Reliant on government revenue from Medicare, its 101 facilities last year produced <span style="color: var(--rust);">$172 million</span> in net operating income, or <span style="color: var(--rust);">5.2%</span> of the total from Welltower's more than 2,500 senior communities. That income had swelled to <span style="color: var(--rust);">$212 million in the first three months</span> of 2026 alone.</p>
+  <p>Putting the spotlight on Welltower could pressure it to live up to its purported focus on improving conditions, not just profits. In his April letter to investors, CEO Mitra wrote: <span style="color: var(--rust);">"And, to get the most out of our assets, we are placing operations and technology first, with a singular – and maniacal – focus on delighting customers and prioritizing site-level employee satisfaction."</span></p>
+</section>
+
+<div class="section-divider"></div>
+
+<script>
+// Intersection Observer for fade-in reveals
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+
+      // Animate bars when they come into view
+      const bars = entry.target.querySelectorAll('.bar-fill[data-width]');
+      bars.forEach(bar => {
+        setTimeout(() => {
+          bar.style.width = bar.dataset.width;
+        }, 150);
+      });
+
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Animate hero title immediately
+setTimeout(() => {
+  const hero = document.querySelector('.hero .reveal');
+  if (hero) {
+    hero.classList.add('visible');
+  }
+}, 200);
+
+// ── Scrollytelling map (same pattern as the working Yale template) ──
+(function () {
+  var scroller = scrollama();
+
+  function handleStepEnter(response) {
+    var step = response.element.dataset.step;
+
+    // toggle active caption
+    document.querySelectorAll('.scrolly-step').forEach(function (el) {
+      el.classList.remove('active');
+    });
+    response.element.classList.add('active');
+
+    // toggle active image
+    document.querySelectorAll('.scrolly-img').forEach(function (img) {
+      img.classList.remove('active');
+    });
+    var img = document.getElementById('simg-' + step);
+    if (img) img.classList.add('active');
+  }
+
+  scroller
+    .setup({
+      step: '#scrolly-map .scrolly-step',
+      offset: 0.5,
+      debug: false
+    })
+    .onStepEnter(handleStepEnter);
+
+  window.addEventListener('resize', scroller.resize);
+})();
+
+</script>
+</body>
+</html>

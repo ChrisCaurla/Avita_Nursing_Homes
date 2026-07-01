@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.0.4/scrollama.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -598,6 +600,78 @@ body {
   .hero-scroll-hint { animation: none; opacity: 1; }
   .scroll-arrow { animation: none; }
 }
+
+/* ─── SCROLLYTELLING MAP SECTION ───
+   Pattern: the sticky image is pinned in place (position: sticky).
+   The caption column is a NORMAL, in-flow element that gets pulled
+   up on top of the sticky box with a negative margin-top equal to
+   the sticky box's height. Because the caption column itself is
+   NOT sticky, the browser scrolls it natively — no JS needed to
+   move it. Scrollama just watches which step is centered in the
+   viewport and toggles which image/caption is "active".
+*/
+.scrolly-section { position: relative; width: 100%; }
+
+.scrolly-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  z-index: 0;
+}
+.scrolly-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: right center;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  pointer-events: none;
+}
+.scrolly-img.active { opacity: 1; }
+
+/* This column is pulled up over the sticky image and scrolls normally */
+.scrolly-overlay {
+  position: relative;
+  z-index: 2;
+  margin-top: -100vh;
+  pointer-events: none;
+}
+
+.scrolly-step {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 6%;
+}
+
+.scrolly-step p {
+  max-width: 420px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1.4;
+  color: var(--cream);
+  margin: 0;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.scrolly-step p em { color: var(--rust); font-style: normal; }
+
+.scrolly-step.active p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrolly-step p { transition: none; }
+}
+
 </style>
 </head>
 <body>
@@ -607,7 +681,7 @@ body {
   <img class="hero-img" src="embedded_image_1.png" alt="A nursing home facility at sunset with dramatic orange clouds">
   <div class="hero-overlay"></div>
   <h1 class="hero-title reveal">
-    Florida's Worst<br>Nursing Homes
+    Profiting from <br>Florida's Worst<br>Nursing Homes
   </h1>
   <div class="hero-scroll-hint">
     <span>Scroll</span>
@@ -625,62 +699,54 @@ body {
   <p>An analysis of <span style="color: var(--rust);">13,574 federal inspection records</span> filed against Florida nursing homes over the past three years corroborates the workers' accounts. 
 </section>
 
-<div class="section-divider"></div>
 
-<!-- MAP IMAGE -->
-<div class="full-image-block reveal">
-  <img src="floridaAndAviataScore.png" alt="Map comparing Aviata Score vs Florida Score for nursing homes" style="width:100%; display:block;">
+<!-- ─── SCROLLYTELLING MAP ─── -->
+<div class="scrolly-section" id="scrolly-map">
+  <div class="scrolly-sticky">
+    <img id="simg-1" class="scrolly-img active" src="img1.png" alt="Map of all Florida nursing homes">
+    <img id="simg-2" class="scrolly-img" src="img2.png" alt="Map highlighting Aviata facilities">
+    <img id="simg-3" class="scrolly-img" src="img3.png" alt="Aviata citation rate vs Florida average">
+  </div>
+
+  <div class="scrolly-overlay">
+    <div class="scrolly-step active" data-step="1">
+      <p>There are <em>694 registered nursing homes</em> in Florida — one of the largest concentrations in the country.</p>
+    </div>
+    <div class="scrolly-step" data-step="2">
+      <p><em>53 of them</em> are operated by the Aviata Health Group, scattered across the state from the Panhandle to Miami.</p>
+    </div>
+    <div class="scrolly-step" data-step="3">
+      <p>An analysis of <em>13,574 federal inspection records</em> filed over the past three years shows Aviata facilities received <em>43% more citations</em> than the state average.</p>
+    </div>
+  </div>
 </div>
 
 <div class="section-divider"></div>
 
-<!-- SCORES EXPLAINER CHAPTER -->
+<!-- VIOLATIONS -->
 <section class="chapter reveal">
-  <p>There are 694 registered nursing homes in Florida. 53 of them are operated by the Aviata Health Group. The federal government regularly inspects nursing homes to make sure they comply with federal standards. Their evaluations take into account the hygiene of each facility, whether it is understaffed, if there have been any complaints, and dozens of other aspects that influence the well being of residents. These metrics are then condensed into an overall score to help people decide which nursing homes are better or worse. The score goes from zero to five, with five being the best.</p>
-  <p>This map shows all nursing homes in Florida with their relative score. Darker colors indicate lower score. Aviata facilities are significantly worse. Their average score is 2.3, compared to Florida's 3.7.</p>
+  <p>The majority of the violations mirrored what workers described, such as unhygienic conditions and old equipment. The most common citation is for lack of "a safe, clean, comfortable and homelike environment," a category where Aviata was cited <span style="color: var(--rust);">54% more often</span> than the rest of the nursing homes in Florida. Violations of residents' rights were <span style="color: var(--rust);">51% more common</span>.</p>
+  <p>The consequences are severe. Federal inspectors issued <span style="color: var(--rust);">"Immediate Jeopardy"</span> citations — the most serious CMS level reserved for risks of serious harm or death — <span style="color: var(--rust);">56% more often</span> than the Florida norm.</p>
 </section>
 
 <div class="section-divider"></div>
 
-<!-- BAR CHART IMAGE -->
+<!-- IMG4 -->
 <div class="full-image-block reveal">
-  <img src="barChartScore.png" alt="Bar chart comparing Florida average score of 3.7 vs Aviata average score of 2.3" style="width:100%; display:block;">
+  <img src="img4.png" alt="Img4" style="width:100%; display:block;">
 </div>
 
 <div class="section-divider"></div>
 
-<!-- More analyis -->
+<!-- WELLTOWER / OWNERSHIP -->
 <section class="chapter reveal">
-  <p>But the overall score doesn't capture the severity of the conditions in the Aviata facilities. The group's nursing homes received 46% more citations than the state average.</p> 
-  <p>The majority of the violations mirrored what workers described, such as unhygienic conditions and old equipment. The most common citation is for infringing "residents' right to a safe, clean, comfortable and homelike environment," a category where Aviata was cited 54% more often than the rest of the nursing homes in Florida. </p>
-  <p>The consequences are severe. Federal inspectors issued <span style="color: var(--rust);">"Immediate Jeopardy" </span> citations — the most serious CMS level reserved for risks of serious harm or death — 39% more often than the Florida norm.</p>
-</section>
-
-<!-- PIE CHART IMAGE -->
-<div class="full-image-block reveal">
-  <img src="pieChart-CitationsType.png" alt="Pie chart showing types of deficiencies at Aviata nursing homes" style="width:100%; display:block;">
-</div>
-
-<div class="section-divider"></div>
-
-<!-- CITATIONS TYPE EXPLAINER -->
-<section class="chapter reveal">
-  <p>As the pie chart shows, most deficiencies recorded at Aviata facilities are in the category "quality of life and care." The type of extreme cost-cutting measures described by workers at Aviata are likely to lead to citations in this category.</p>
-  <p>In all of these categories, Aviata nursing homes have a higher number of deficiencies. The bars below calculate the number of citations per 100 residents.</p>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- BAR CHART CITATIONS TYPE IMAGE -->
-<div class="full-image-block reveal">
-  <img src="barChartCitationsType.png" alt="Bar chart showing citations per 100 residents for Quality of Life and Care and Resident Rights, Aviata vs Florida" style="width:100%; display:block;">
-</div>
-
-<div class="section-divider"></div>
-
-<!-- CLOSING LINE -->
-<section class="chapter reveal">
-  <p>Despite their record of patient harm, these facilities receive millions in taxpayer money through Medicare and Medicaid programs.</p>
+  <p>Despite their record of patient harm, these facilities receive millions in taxpayer money through Medicare and Medicaid programs. And Welltower can hold its properties tax-free, since it is structured as a real-estate investment trust or REIT.</p>
+  <p>Bill Dean, a lawyer who has sued Aviata facilities dozens of times over the last 25 years, says he has seen the same pattern for over a decade. <span style="color: var(--rust);">"They accumulate lawsuits, then they go bankrupt, and come back with a different name,"</span> he says. But what's different this time is that early last year, Aviata facilities were acquired by a public company.</p>
+  <p>Unlike most private nursing home operators, Aviata's finances became public with its 2025 acquisition by <span style="color: var(--rust);">Welltower</span>, the nation's largest provider of senior housing. These financial statements give a rare window into the fortunes that come from neglecting patients and workers. Welltower paid Aviata's owners <span style="color: var(--rust);">$1.8 billion</span> in 2025 for 85 nursing homes in Florida and similarly substandard ones in Texas, granting its current owners a long-term operating contract.</p>
+  <p>Welltower's CEO profited from the deal, among the $33 billion in acquisitions that triggered an astounding <span style="color: var(--rust);">$821 million</span> in compensation last year. CEO Shankh Mitra brags about the warp speed of his acquisitions, since senior housing is selling at a discount to when its developers overestimated demand, and is expected to soon be insufficient for the rapidly aging U.S. population.</p>
+  <p>Mitra has quadrupled Welltower's stock price since becoming CEO in 2020. Based in Toledo, Ohio, the <span style="color: var(--rust);">$141 billion</span> company is a real-estate investment trust, or REIT, which holds properties tax-free and receives part of its income. Welltower is part of the S&P 500 index, so its shares are widely held by major pension funds and millions of retirees through their 401(k) plans. Like most roll-ups, Welltower saves money by combining back-office functions like accounting and human resources.</p>
+  <p>Aviata, as a substandard chain dependent on government funding through Medicare and Medicaid, marked Welltower's quiet move to the bottom of the senior market. It seems that substandard nursing homes can be more profitable than its "ultra-luxury" or "trophy" assisted living facilities. Welltower noted that it can earn even more by further cutting expenses, measured per occupied bed. <span style="color: var(--rust);">"You've got quality assets: check. Quality operator: check. Cash flow with room to the upside: check,"</span> said Co-President and Chief Investment Officer Nikhil Chaudhri in an April 2025 earnings call. Reliant on government revenue from Medicare, its 101 facilities last year produced <span style="color: var(--rust);">$172 million</span> in net operating income, or <span style="color: var(--rust);">5.2%</span> of the total from Welltower's more than 2,500 senior communities. That income had swelled to <span style="color: var(--rust);">$212 million in the first three months</span> of 2026 alone.</p>
+  <p>Putting the spotlight on Welltower could pressure it to live up to its purported focus on improving conditions, not just profits. In his April letter to investors, CEO Mitra wrote: <span style="color: var(--rust);">"And, to get the most out of our assets, we are placing operations and technology first, with a singular – and maniacal – focus on delighting customers and prioritizing site-level employee satisfaction."</span></p>
 </section>
 
 <div class="section-divider"></div>
@@ -714,6 +780,39 @@ setTimeout(() => {
     hero.classList.add('visible');
   }
 }, 200);
+
+// ── Scrollytelling map (same pattern as the working Yale template) ──
+(function () {
+  var scroller = scrollama();
+
+  function handleStepEnter(response) {
+    var step = response.element.dataset.step;
+
+    // toggle active caption
+    document.querySelectorAll('.scrolly-step').forEach(function (el) {
+      el.classList.remove('active');
+    });
+    response.element.classList.add('active');
+
+    // toggle active image
+    document.querySelectorAll('.scrolly-img').forEach(function (img) {
+      img.classList.remove('active');
+    });
+    var img = document.getElementById('simg-' + step);
+    if (img) img.classList.add('active');
+  }
+
+  scroller
+    .setup({
+      step: '#scrolly-map .scrolly-step',
+      offset: 0.5,
+      debug: false
+    })
+    .onStepEnter(handleStepEnter);
+
+  window.addEventListener('resize', scroller.resize);
+})();
+
 </script>
 </body>
 </html>
